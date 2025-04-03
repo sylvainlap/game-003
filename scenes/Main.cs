@@ -1,96 +1,71 @@
+using Game.Manager;
 using Godot;
-using System.Collections.Generic;
 
 namespace Game;
 
 public partial class Main : Node
 {
-	private Sprite2D cursor;
-	private PackedScene buildingScene;
-	private Button placeBuildingButton;
-	private TileMapLayer highlightTileMapLayer;
-	private Vector2? hoveredGridCell;
-	private HashSet<Vector2> occupiedCells = new();
+    private GridManager gridManager;
+    private Sprite2D cursor;
+    private PackedScene buildingScene;
+    private Button placeBuildingButton;
+    private Vector2I? hoveredGridCell;
 
-	public override void _Ready()
-	{
-		cursor = GetNode<Sprite2D>("Cursor");
-		buildingScene = GD.Load<PackedScene>("res://scenes/building/Building.tscn");
-		placeBuildingButton = GetNode<Button>("PlaceBuildingButton");
-		highlightTileMapLayer = GetNode<TileMapLayer>("HighlightTileMapLayer");
+    public override void _Ready()
+    {
+        gridManager = GetNode<GridManager>("GridManager");
+        cursor = GetNode<Sprite2D>("Cursor");
+        buildingScene = GD.Load<PackedScene>("res://scenes/buildings/Building.tscn");
+        placeBuildingButton = GetNode<Button>("PlaceBuildingButton");
 
-		cursor.Visible = false;
+        cursor.Visible = false;
 
-		placeBuildingButton.Pressed += OnButtonPressed;
-	}
+        placeBuildingButton.Pressed += OnButtonPressed;
+    }
 
-	public override void _UnhandledInput(InputEvent @event)
-	{
-		if (hoveredGridCell.HasValue && @event.IsActionPressed("left_click") && !occupiedCells.Contains(hoveredGridCell.Value))
-		{
-			PlaceBuildingAtHoveredCellPosition();
-			cursor.Visible = false;
-		}
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (
+            hoveredGridCell.HasValue
+            && @event.IsActionPressed("left_click")
+            && gridManager.IsTilePositionValid(hoveredGridCell.Value)
+        )
+        {
+            PlaceBuildingAtHoveredCellPosition();
+            cursor.Visible = false;
+        }
+    }
 
-		base._UnhandledInput(@event);
-	}
+    public override void _Process(double delta)
+    {
+        var gridPosition = gridManager.GetMouseGridCellPosition();
+        cursor.GlobalPosition = gridPosition * 64;
+        if (cursor.Visible && (!hoveredGridCell.HasValue || hoveredGridCell.Value != gridPosition))
+        {
+            hoveredGridCell = gridPosition;
+            gridManager.HighlightBuildableTiles();
+        }
+    }
 
-	public override void _Process(double delta)
-	{
-		var gridPosition = GetMouseGridCellPosition();
-		cursor.GlobalPosition = gridPosition * 64;
-		if (cursor.Visible && (!hoveredGridCell.HasValue || hoveredGridCell.Value != gridPosition))
-		{
-			hoveredGridCell = gridPosition;
-			UpdateHighlightTileMapLayer();
-		}
-	}
+    private void PlaceBuildingAtHoveredCellPosition()
+    {
+        if (!hoveredGridCell.HasValue)
+        {
+            return;
+        }
 
-	private Vector2 GetMouseGridCellPosition()
-	{
-		var mousePosition = highlightTileMapLayer.GetGlobalMousePosition();
-		var gridPosition = mousePosition / 64;
-		gridPosition = gridPosition.Floor();
-		return gridPosition;
-	}
+        var building = buildingScene.Instantiate<Node2D>();
+        AddChild(building);
 
-	private void PlaceBuildingAtHoveredCellPosition()
-	{
-		if (!hoveredGridCell.HasValue)
-		{
-			return;
-		}
+        building.GlobalPosition = hoveredGridCell.Value * 64;
+        gridManager.MarkTileAsOccupied(hoveredGridCell.Value);
 
-		var building = buildingScene.Instantiate<Node2D>();
-		AddChild(building);
+        hoveredGridCell = null;
+        gridManager.ClearHighlightedTiles();
+    }
 
-		building.GlobalPosition = hoveredGridCell.Value * 64;
-		occupiedCells.Add(hoveredGridCell.Value);
-
-		hoveredGridCell = null;
-		UpdateHighlightTileMapLayer();
-	}
-
-	private void UpdateHighlightTileMapLayer()
-	{
-		highlightTileMapLayer.Clear();
-
-		if (!hoveredGridCell.HasValue)
-		{
-			return;
-		}
-
-		for (var x = hoveredGridCell.Value.X - 3; x <= hoveredGridCell.Value.X + 3; x++)
-		{
-			for (var y = hoveredGridCell.Value.Y - 3; y <= hoveredGridCell.Value.Y + 3; y++)
-			{
-				highlightTileMapLayer.SetCell(new Vector2I((int)x, (int)y), 0, Vector2I.Zero);
-			}
-		}
-	}
-
-	private void OnButtonPressed()
-	{
-		cursor.Visible = true;
-	}
+    private void OnButtonPressed()
+    {
+        cursor.Visible = true;
+    }
 }
