@@ -11,10 +11,10 @@ public partial class BuildingComponent : Node2D
     public override void _Ready()
     {
         AddToGroup(nameof(BuildingComponent));
-        GameEvents.EmitBuildingPlaced(this);
+        Callable.From(() => GameEvents.EmitBuildingPlaced(this)).CallDeferred();
     }
 
-    public Vector2I getGridCellPosition()
+    public Vector2I GetGridCellPosition()
     {
         var gridPosition = GlobalPosition / 64;
         gridPosition = gridPosition.Floor();
