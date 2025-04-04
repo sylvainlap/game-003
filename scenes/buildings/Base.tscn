@@ -6,10 +6,13 @@
 size = Vector2(64, 64)
 
 [node name="Base" type="Node2D"]
+y_sort_enabled = true
 
 [node name="BuildingComponent" parent="." instance=ExtResource("1_7y5n3")]
-BuildableRadius = 3
+BuildingResourcePath = "uid://c30mdcv5dlpg3"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_o2je7")
 centered = false
+offset = Vector2(-32, -32)

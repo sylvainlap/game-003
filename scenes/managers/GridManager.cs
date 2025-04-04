@@ -16,9 +16,12 @@ public partial class GridManager : Node
     [Export]
     private TileMapLayer baseTerrainTileMapLayer;
 
+    private List<TileMapLayer> allTileMapLayers = new();
+
     public override void _Ready()
     {
         GameEvents.Instance.BuildingPlaced += OnBuildingPlaced;
+        allTileMapLayers = GetAllTileMapLayers(baseTerrainTileMapLayer);
     }
 
     public void HighlightBuildableTiles()
@@ -68,7 +71,7 @@ public partial class GridManager : Node
     {
         var validTiles = GetValidTilesInRadius(
             buildingComponent.GetGridCellPosition(),
-            buildingComponent.BuildableRadius
+            buildingComponent.BuildingResource.BuildableRadius
         );
 
         validBuildableTiles.UnionWith(validTiles);
@@ -97,12 +100,16 @@ public partial class GridManager : Node
 
     private bool IsTilePositionValid(Vector2I tilePosition)
     {
-        var customData = baseTerrainTileMapLayer.GetCellTileData(tilePosition);
+        foreach (var layer in allTileMapLayers)
+        {
+            var customData = layer.GetCellTileData(tilePosition);
+            if (customData == null)
+                continue;
 
-        if (customData == null)
-            return false;
+            return (bool)customData.GetCustomData("buildable");
+        }
 
-        return (bool)customData.GetCustomData("buildable");
+        return false;
     }
 
     private IEnumerable<Vector2I> GetOccupiedTiles()
@@ -112,6 +119,26 @@ public partial class GridManager : Node
             .Cast<BuildingComponent>();
 
         return buildingComponents.Select(_ => _.GetGridCellPosition());
+    }
+
+    private List<TileMapLayer> GetAllTileMapLayers(TileMapLayer rootTileMapLayer)
+    {
+        var result = new List<TileMapLayer>();
+
+        var children = rootTileMapLayer.GetChildren();
+        children.Reverse();
+
+        foreach (var child in children)
+        {
+            if (child is TileMapLayer childLayer)
+            {
+                result.AddRange(GetAllTileMapLayers(childLayer));
+            }
+        }
+
+        result.Add(rootTileMapLayer);
+
+        return result;
     }
 
     private void OnBuildingPlaced(BuildingComponent buildingComponent)
