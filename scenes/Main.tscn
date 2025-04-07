@@ -1,16 +1,24 @@
-[gd_scene load_steps=7 format=4 uid="uid://cnhmfrv8pldr2"]
+[gd_scene load_steps=9 format=4 uid="uid://cnhmfrv8pldr2"]
 
 [ext_resource type="Script" uid="uid://d0rpeq4k5hjrx" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://cwnhkcsibw1o8" path="res://resources/tiles.tres" id="2_0bbpv"]
+[ext_resource type="PackedScene" uid="uid://b8abrshtes68y" path="res://scenes/managers/BuildingManager.tscn" id="2_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://0vhw6f6g746t" path="res://scenes/managers/GridManager.tscn" id="2_rarhs"]
 [ext_resource type="TileSet" uid="uid://24on0gfopfgm" path="res://resources/highlight_tileset.tres" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://cu17f0bk65h5k" path="res://scenes/buildings/Base.tscn" id="5_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://dmpuqea0m7kje" path="res://scenes/ui/GameUi.tscn" id="6_c01mt"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_elqb8"]
 size = Vector2(64, 64)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_elqb8")
+
+[node name="BuildingManager" parent="." node_paths=PackedStringArray("cursor", "gameUi", "gridManager", "ySortRoot") instance=ExtResource("2_nxtc6")]
+cursor = NodePath("../Cursor")
+gameUi = NodePath("../GameUi")
+gridManager = NodePath("../GridManager")
+ySortRoot = NodePath("../YSortRoot")
 
 [node name="GridManager" parent="." node_paths=PackedStringArray("highlightTileMapLayer", "baseTerrainTileMapLayer") instance=ExtResource("2_rarhs")]
 highlightTileMapLayer = NodePath("../HighlightTileMapLayer")
@@ -40,16 +48,4 @@ tile_set = ExtResource("2_rvslj")
 texture = SubResource("PlaceholderTexture2D_elqb8")
 centered = false
 
-[node name="PlaceTowerButton" type="Button" parent="."]
-offset_left = 64.0
-offset_top = 640.0
-offset_right = 181.0
-offset_bottom = 671.0
-text = "Place Tower"
-
-[node name="PlaceVillageButton" type="Button" parent="."]
-offset_left = 192.0
-offset_top = 640.0
-offset_right = 309.0
-offset_bottom = 671.0
-text = "Place Village"
+[node name="GameUi" parent="." instance=ExtResource("6_c01mt")]
