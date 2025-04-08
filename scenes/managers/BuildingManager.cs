@@ -1,4 +1,6 @@
+using System.Linq;
 using Game.Building;
+using Game.Component;
 using Game.Resources.Building;
 using Game.Ui;
 using Godot;
@@ -7,8 +9,9 @@ namespace Game.Manager;
 
 public partial class BuildingManager : Node
 {
-    private readonly StringName ACTION_LEFT_CLICK = "left_click";
     private readonly StringName ACTION_CANCEL = "cancel";
+    private readonly StringName ACTION_LEFT_CLICK = "left_click";
+    private readonly StringName ACTION_RIGHT_CLICK = "right_click";
 
     [Export]
     private PackedScene buildingGhostScene;
@@ -22,12 +25,19 @@ public partial class BuildingManager : Node
     [Export]
     private Node2D ySortRoot;
 
+    private enum State
+    {
+        Normal,
+        PlacingBuilding,
+    }
+
     private int startingResourceCount = 4;
     private int currentResourceCount;
     private int currentlyUsedResourceCount;
     private BuildingResource toPlaceBuildingResource;
-    private Vector2I? hoveredGridCell;
+    private Vector2I hoveredGridCell;
     private BuildingGhost buildingGhost;
+    private State currentState;
 
     private int AvailableResourceCount =>
         startingResourceCount + currentResourceCount - currentlyUsedResourceCount;
@@ -40,59 +50,64 @@ public partial class BuildingManager : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionPressed(ACTION_CANCEL))
+        switch (currentState)
         {
-            ClearBuildingGhost();
-        }
-        else if (
-            @event.IsActionPressed(ACTION_LEFT_CLICK)
-            && hoveredGridCell.HasValue
-            && toPlaceBuildingResource != null
-            && IsBuildingPlacableAtTile(hoveredGridCell.Value)
-        )
-        {
-            PlaceBuildingAtHoveredCellPosition();
+            case State.Normal:
+                if (@event.IsActionPressed(ACTION_RIGHT_CLICK))
+                {
+                    DestroyBuildingAtHoveredCellPosition();
+                }
+                break;
+            case State.PlacingBuilding:
+                if (@event.IsActionPressed(ACTION_CANCEL))
+                {
+                    ChangeState(State.Normal);
+                }
+                else if (
+                    @event.IsActionPressed(ACTION_LEFT_CLICK)
+                    && toPlaceBuildingResource != null
+                    && IsBuildingPlacableAtTile(hoveredGridCell)
+                )
+                {
+                    PlaceBuildingAtHoveredCellPosition();
+                }
+                break;
         }
     }
 
     public override void _Process(double delta)
     {
-        if (!IsInstanceValid(buildingGhost))
-        {
-            return;
-        }
-
         var gridPosition = gridManager.GetMouseGridCellPosition();
-        buildingGhost.GlobalPosition = gridPosition * 64;
 
-        if (
-            toPlaceBuildingResource != null
-            && (!hoveredGridCell.HasValue || hoveredGridCell.Value != gridPosition)
-        )
+        if (hoveredGridCell != gridPosition)
         {
             hoveredGridCell = gridPosition;
-            UpdateGridDisplay();
+            UpdateHoveredGridCell();
+        }
+
+        switch (currentState)
+        {
+            case State.Normal:
+                break;
+            case State.PlacingBuilding:
+                buildingGhost.GlobalPosition = gridPosition * 64;
+                break;
         }
     }
 
     private void UpdateGridDisplay()
     {
-        if (hoveredGridCell == null)
-        {
-            return;
-        }
-
         gridManager.ClearHighlightedTiles();
         gridManager.HighlightBuildableTiles();
 
-        if (IsBuildingPlacableAtTile(hoveredGridCell.Value))
+        if (IsBuildingPlacableAtTile(hoveredGridCell))
         {
             gridManager.HighlightExpandedBuildableTiles(
-                hoveredGridCell.Value,
+                hoveredGridCell,
                 toPlaceBuildingResource.BuildableRadius
             );
             gridManager.HighlightResourceTiles(
-                hoveredGridCell.Value,
+                hoveredGridCell,
                 toPlaceBuildingResource.ResourceRadius
             );
             buildingGhost.SetValid();
@@ -105,25 +120,36 @@ public partial class BuildingManager : Node
 
     private void PlaceBuildingAtHoveredCellPosition()
     {
-        if (!hoveredGridCell.HasValue)
+        var building = toPlaceBuildingResource.BuildingScene.Instantiate<Node2D>();
+        ySortRoot.AddChild(building);
+
+        building.GlobalPosition = hoveredGridCell * 64;
+
+        currentlyUsedResourceCount += toPlaceBuildingResource.ResourceCost;
+
+        ChangeState(State.Normal);
+    }
+
+    private void DestroyBuildingAtHoveredCellPosition()
+    {
+        var buildingComponent = GetTree()
+            .GetNodesInGroup(nameof(BuildingComponent))
+            .Cast<BuildingComponent>()
+            .Where(_ => _.GetGridCellPosition() == hoveredGridCell)
+            .FirstOrDefault();
+
+        if (buildingComponent == null)
         {
             return;
         }
 
-        var building = toPlaceBuildingResource.BuildingScene.Instantiate<Node2D>();
-        ySortRoot.AddChild(building);
+        currentlyUsedResourceCount -= buildingComponent.BuildingResource.ResourceCost;
 
-        building.GlobalPosition = hoveredGridCell.Value * 64;
-
-        currentlyUsedResourceCount += toPlaceBuildingResource.ResourceCost;
-
-        ClearBuildingGhost();
+        buildingComponent.Destroy();
     }
 
     private void ClearBuildingGhost()
     {
-        hoveredGridCell = null;
-
         gridManager.ClearHighlightedTiles();
 
         if (IsInstanceValid(buildingGhost))
@@ -140,20 +166,54 @@ public partial class BuildingManager : Node
             && toPlaceBuildingResource.ResourceCost <= AvailableResourceCount;
     }
 
-    private void OnBuildingResourceSelected(BuildingResource buildingResource)
+    private void UpdateHoveredGridCell()
     {
-        if (IsInstanceValid(buildingGhost))
+        switch (currentState)
         {
-            buildingGhost.QueueFree();
+            case State.Normal:
+                break;
+            case State.PlacingBuilding:
+                UpdateGridDisplay();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ChangeState(State toState)
+    {
+        switch (currentState)
+        {
+            case State.Normal:
+                break;
+            case State.PlacingBuilding:
+                ClearBuildingGhost();
+                toPlaceBuildingResource = null;
+                break;
         }
 
-        buildingGhost = buildingGhostScene.Instantiate<BuildingGhost>();
-        ySortRoot.AddChild(buildingGhost);
+        currentState = toState;
+
+        switch (currentState)
+        {
+            case State.Normal:
+                break;
+            case State.PlacingBuilding:
+                buildingGhost = buildingGhostScene.Instantiate<BuildingGhost>();
+                ySortRoot.AddChild(buildingGhost);
+                break;
+        }
+    }
+
+    private void OnBuildingResourceSelected(BuildingResource buildingResource)
+    {
+        ChangeState(State.PlacingBuilding);
 
         var buildingSprite = buildingResource.SpriteScene.Instantiate<Sprite2D>();
         buildingGhost.AddChild(buildingSprite);
 
         toPlaceBuildingResource = buildingResource;
+
         UpdateGridDisplay();
     }
 
