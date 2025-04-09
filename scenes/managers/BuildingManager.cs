@@ -14,6 +14,9 @@ public partial class BuildingManager : Node
     private readonly StringName ACTION_RIGHT_CLICK = "right_click";
 
     [Export]
+    private int startingResourceCount = 4;
+
+    [Export]
     private PackedScene buildingGhostScene;
 
     [Export]
@@ -31,7 +34,6 @@ public partial class BuildingManager : Node
         PlacingBuilding,
     }
 
-    private int startingResourceCount = 4;
     private int currentResourceCount;
     private int currentlyUsedResourceCount;
     private BuildingResource toPlaceBuildingResource;
