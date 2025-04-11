@@ -1,4 +1,5 @@
 using Game.Resources.Building;
+using Game.UI;
 using Godot;
 
 namespace Game.Ui;
@@ -11,23 +12,28 @@ public partial class GameUi : CanvasLayer
     [Export]
     private BuildingResource[] buildingResources;
 
-    private HBoxContainer hBoxContainer;
+    [Export]
+    private PackedScene buildingSectionScene;
+
+    private VBoxContainer buildingSectionContainer;
 
     public override void _Ready()
     {
-        hBoxContainer = GetNode<HBoxContainer>("MarginContainer/HBoxContainer");
+        buildingSectionContainer = GetNode<VBoxContainer>("%BuildingSectionContainer");
 
-        CreateBuildingButtons();
+        CreateBuildingSections();
     }
 
-    private void CreateBuildingButtons()
+    private void CreateBuildingSections()
     {
         foreach (var buildingResource in buildingResources)
         {
-            var buildingButton = new Button();
-            buildingButton.Text = $"Place {buildingResource.DisplayName}";
-            hBoxContainer.AddChild(buildingButton);
-            buildingButton.Pressed += () =>
+            var buildingSection = buildingSectionScene.Instantiate<BuildingSection>();
+            buildingSectionContainer.AddChild(buildingSection);
+
+            buildingSection.SetBuildingResource(buildingResource);
+
+            buildingSection.SelectButtonPressed += () =>
             {
                 EmitSignal(SignalName.BuildingResourceSelected, buildingResource);
             };

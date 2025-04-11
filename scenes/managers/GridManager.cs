@@ -82,14 +82,7 @@ public partial class GridManager : Node
 
     public bool IsTileAreaBuildable(Rect2I tileArea)
     {
-        var tiles = new List<Vector2I>();
-        for (int x = tileArea.Position.X; x < tileArea.End.X; x++)
-        {
-            for (int y = tileArea.Position.Y; y < tileArea.End.Y; y++)
-            {
-                tiles.Add(new Vector2I(x, y));
-            }
-        }
+        var tiles = tileArea.ToTiles();
 
         if (tiles.Count == 0)
         {
@@ -199,13 +192,20 @@ public partial class GridManager : Node
     {
         var result = new List<Vector2I>();
 
+        var tileAreaF = tileArea.ToRect2F();
+        var tileAreaCenter = tileAreaF.GetCenter();
+        var radiusMod = MathF.Max(tileAreaF.Size.X, tileAreaF.Size.Y) / 2;
+
         for (var x = tileArea.Position.X - radius; x < tileArea.End.X + radius; x++)
         {
             for (var y = tileArea.Position.Y - radius; y < tileArea.End.Y + radius; y++)
             {
                 var tilePosition = new Vector2I(x, y);
 
-                if (!filterFn(tilePosition))
+                if (
+                    !IsTileInsideCircle(tileAreaCenter, tilePosition, radius + radiusMod)
+                    || !filterFn(tilePosition)
+                )
                     continue;
 
                 result.Add(tilePosition);
@@ -213,6 +213,16 @@ public partial class GridManager : Node
         }
 
         return result;
+    }
+
+    private bool IsTileInsideCircle(Vector2 centerPosition, Vector2 tilePosition, float radius)
+    {
+        float distanceX = centerPosition.X - (tilePosition.X + (float)0.5);
+        float distanceY = centerPosition.Y - (tilePosition.Y + (float)0.5);
+
+        float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+
+        return distanceSquared <= (radius * radius);
     }
 
     private List<Vector2I> GetValidTilesInRadius(Rect2I tileArea, int radius)

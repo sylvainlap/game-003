@@ -33,6 +33,10 @@ project/assembly_name="game-003"
 
 naming/scene_name_casing=1
 
+[gui]
+
+theme/custom="uid://b3x5h46kdstcr"
+
 [input]
 
 left_click={
