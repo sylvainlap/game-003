@@ -13,6 +13,9 @@ public partial class BuildingManager : Node
     private readonly StringName ACTION_LEFT_CLICK = "left_click";
     private readonly StringName ACTION_RIGHT_CLICK = "right_click";
 
+    [Signal]
+    public delegate void AvailableResourceCountChangedEventHandler(int availableResourceCount);
+
     [Export]
     private int startingResourceCount = 4;
 
@@ -48,6 +51,12 @@ public partial class BuildingManager : Node
     {
         gameUi.BuildingResourceSelected += OnBuildingResourceSelected;
         gridManager.ResourceTilesUpdated += OnResourceTilesUpdated;
+
+        Callable
+            .From(
+                () => EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount)
+            )
+            .CallDeferred();
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -130,6 +139,7 @@ public partial class BuildingManager : Node
         building.GlobalPosition = hoveredGridArea.Position * 64;
 
         currentlyUsedResourceCount += toPlaceBuildingResource.ResourceCost;
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
 
         ChangeState(State.Normal);
     }
@@ -149,6 +159,7 @@ public partial class BuildingManager : Node
         }
 
         currentlyUsedResourceCount -= buildingComponent.BuildingResource.ResourceCost;
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
 
         buildingComponent.Destroy();
     }
@@ -228,5 +239,6 @@ public partial class BuildingManager : Node
     private void OnResourceTilesUpdated(int collectedResourceTilesCount)
     {
         currentResourceCount = collectedResourceTilesCount;
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
     }
 }

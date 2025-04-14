@@ -24,7 +24,8 @@ ySortRoot = NodePath("../YSortRoot")
 highlightTileMapLayer = NodePath("../HighlightTileMapLayer")
 baseTerrainTileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
 
-[node name="GameUi" parent="." instance=ExtResource("6_c01mt")]
+[node name="GameUi" parent="." node_paths=PackedStringArray("buildingManager") instance=ExtResource("6_c01mt")]
+buildingManager = NodePath("../BuildingManager")
 
 [node name="GameCamera" parent="." instance=ExtResource("5_xrhif")]
 
