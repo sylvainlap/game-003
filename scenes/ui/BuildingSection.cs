@@ -1,7 +1,7 @@
 using Game.Resources.Building;
 using Godot;
 
-namespace Game.UI;
+namespace Game.Ui;
 
 public partial class BuildingSection : PanelContainer
 {

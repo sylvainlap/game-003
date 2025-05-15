@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="game-003"
-run/main_scene="uid://d2scm4uv5yq4v"
+run/main_scene="uid://bt318kjxrcsbq"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameEvents="*res://scenes/autoloads/GameEvents.tscn"
+LevelManager="*res://scenes/autoloads/LevelManager.tscn"
 
 [display]
 

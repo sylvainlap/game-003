@@ -1,6 +1,5 @@
 using Game.Manager;
 using Game.Resources.Building;
-using Game.UI;
 using Godot;
 
 namespace Game.Ui;
@@ -30,6 +29,11 @@ public partial class GameUi : CanvasLayer
         CreateBuildingSections();
 
         buildingManager.AvailableResourceCountChanged += OnAvailableResourceCountChanged;
+    }
+
+    public void HideUI()
+    {
+        Visible = false;
     }
 
     private void CreateBuildingSections()
