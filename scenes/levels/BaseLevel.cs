@@ -1,4 +1,5 @@
 using Game.Manager;
+using Game.Resources.Level;
 using Game.Ui;
 using Godot;
 
@@ -9,12 +10,16 @@ public partial class BaseLevel : Node
     [Export]
     private PackedScene levelCompleteScreenScene;
 
+    [Export]
+    private LevelDefinitionResource levelDefinitionResource;
+
     private Node2D baseBuilding;
     private TileMapLayer baseTerrainTileMapLayer;
     private GameCamera gameCamera;
     private GoldMine goldMine;
     private GridManager gridManager;
     private GameUi gameUi;
+    private BuildingManager buildingManager;
 
     public override void _Ready()
     {
@@ -24,9 +29,12 @@ public partial class BaseLevel : Node
         goldMine = GetNode<GoldMine>("%GoldMine");
         gridManager = GetNode<GridManager>("GridManager");
         gameUi = GetNode<GameUi>("GameUi");
+        buildingManager = GetNode<BuildingManager>("BuildingManager");
 
         gameCamera.SetBoundingRect(baseTerrainTileMapLayer.GetUsedRect());
         gameCamera.CenterOnPosition(baseBuilding.GlobalPosition);
+
+        buildingManager.SetStartingResourceCount(levelDefinitionResource.StartingResourceCount);
 
         gridManager.GridStateUpdated += OnGridStateUpdated;
     }
@@ -37,7 +45,7 @@ public partial class BaseLevel : Node
             goldMine.GlobalPosition
         );
 
-        if (gridManager.IsTilePositionBuildable(goldMineTilePosition))
+        if (gridManager.IsTilePositionInAnyBuildingRadius(goldMineTilePosition))
         {
             var levelCompleteScene = levelCompleteScreenScene.Instantiate<LevelCompleteScreen>();
             AddChild(levelCompleteScene);

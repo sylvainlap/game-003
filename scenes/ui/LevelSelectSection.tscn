@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://bhulxo1omkvm0"]
+
+[ext_resource type="Script" uid="uid://btvc1bwgi22tc" path="res://scenes/ui/LevelSelectSection.cs" id="1_ftdwk"]
+[ext_resource type="Texture2D" uid="uid://bl7307vf6ki" path="res://assets/uis/wood_icon.png" id="1_guxwv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6akd"]
+atlas = ExtResource("1_guxwv")
+region = Rect2(39, 78, 32, 22)
+
+[node name="LevelSelectSection" type="PanelContainer"]
+theme_type_variation = &"PanelContainerAlternate"
+script = ExtResource("1_ftdwk")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LevelNumberLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Level 1"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_m6akd")
+stretch_mode = 3
+
+[node name="ResourceCountLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "4"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"

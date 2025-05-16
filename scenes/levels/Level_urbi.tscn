@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=4 uid="uid://d2scm4uv5yq4v"]
+[gd_scene load_steps=5 format=4 uid="uid://d2scm4uv5yq4v"]
 
 [ext_resource type="PackedScene" uid="uid://cnhmfrv8pldr2" path="res://scenes/levels/BaseLevel.tscn" id="1_1pwbc"]
+[ext_resource type="Resource" uid="uid://cv66sklm8gcks" path="res://resources/levels/level_urbi.tres" id="2_dgptq"]
 [ext_resource type="TileSet" uid="uid://cwnhkcsibw1o8" path="res://resources/tiles.tres" id="2_j08sa"]
 [ext_resource type="PackedScene" uid="uid://bmaisdd53cvvd" path="res://scenes/levels/utils/ElevationLayer.tscn" id="3_x4si1"]
 
-[node name="Level1" instance=ExtResource("1_1pwbc")]
+[node name="Level" instance=ExtResource("1_1pwbc")]
+levelDefinitionResource = ExtResource("2_dgptq")
 
 [node name="BuildingManager" parent="." index="0"]
 startingResourceCount = 5
