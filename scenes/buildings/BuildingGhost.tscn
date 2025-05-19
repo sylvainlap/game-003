@@ -1,7 +1,170 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsaevmtlca6qs"]
+[gd_scene load_steps=9 format=3 uid="uid://dsaevmtlca6qs"]
 
 [ext_resource type="Script" uid="uid://dy6yh84ott2jn" path="res://scenes/buildings/BuildingGhost.cs" id="1_joo4v"]
+[ext_resource type="Texture2D" uid="uid://hm3jqgix4at1" path="res://assets/uis/region_top_left.png" id="2_gcsqg"]
+[ext_resource type="Texture2D" uid="uid://ccj4k5752vxgn" path="res://assets/uis/region_top_right.png" id="3_yifjd"]
+[ext_resource type="Texture2D" uid="uid://bhwsfnx5qnqtd" path="res://assets/uis/region_bottom_left.png" id="4_7wbsq"]
+[ext_resource type="Texture2D" uid="uid://cnp6fg4slv6rs" path="res://assets/uis/region_bottom_right.png" id="5_34ugd"]
+
+[sub_resource type="Animation" id="Animation_yifjd"]
+resource_name = "default"
+length = 0.5
+loop_mode = 1
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TopLeft/Sprite2D:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(-2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-8, -8)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TopRight/Sprite2D:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(-2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(8, -8)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BottomLeft/Sprite2D:position")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(-2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-8, 8)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BottomRight/Sprite2D:position")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(-2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(8, 8)]
+}
+
+[sub_resource type="Animation" id="Animation_7wbsq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TopLeft/Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TopRight/Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BottomLeft/Sprite2D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BottomRight/Sprite2D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_34ugd"]
+_data = {
+&"RESET": SubResource("Animation_7wbsq"),
+&"default": SubResource("Animation_yifjd")
+}
 
 [node name="BuildingGhost" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_joo4v")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_34ugd")
+}
+autoplay = "default"
+
+[node name="TopLeft" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="TopLeft"]
+texture = ExtResource("2_gcsqg")
+centered = false
+offset = Vector2(-31, -33)
+
+[node name="TopRight" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(64, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="TopRight"]
+texture = ExtResource("3_yifjd")
+centered = false
+offset = Vector2(-34, -33)
+
+[node name="BottomLeft" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(0, 64)
+
+[node name="Sprite2D" type="Sprite2D" parent="BottomLeft"]
+texture = ExtResource("4_7wbsq")
+centered = false
+offset = Vector2(-31, -30)
+
+[node name="BottomRight" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(64, 64)
+
+[node name="Sprite2D" type="Sprite2D" parent="BottomRight"]
+texture = ExtResource("5_34ugd")
+centered = false
+offset = Vector2(-34, -30)
+
+[node name="SpriteRoot" type="Node2D" parent="."]
+top_level = true
+y_sort_enabled = true
+
+[node name="UpDownRoot" type="Node2D" parent="SpriteRoot"]
+unique_name_in_owner = true
