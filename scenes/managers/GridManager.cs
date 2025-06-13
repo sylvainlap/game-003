@@ -128,6 +128,14 @@ public partial class GridManager : Node
         highlightTileMapLayer.Clear();
     }
 
+    public Vector2I GetMouseGridCellPositionWithDimensionOffset(Vector2 dimensions)
+    {
+        var mouseGridPosition = highlightTileMapLayer.GetGlobalMousePosition() / 64;
+        mouseGridPosition -= dimensions / 2;
+        mouseGridPosition = mouseGridPosition.Round();
+        return new Vector2I((int)mouseGridPosition.X, (int)mouseGridPosition.Y);
+    }
+
     public Vector2I GetMouseGridCellPosition()
     {
         return ConvertWorldPositionToTilePosition(highlightTileMapLayer.GetGlobalMousePosition());
@@ -186,17 +194,14 @@ public partial class GridManager : Node
         EmitSignal(SignalName.GridStateUpdated);
     }
 
-    private void RecalculateGrid(BuildingComponent excludeBuildingComponent)
+    private void RecalculateGrid()
     {
         occupiedTiles.Clear();
         allTilesInBuildingRadius.Clear();
         validBuildableTiles.Clear();
         collectedResourceTiles.Clear();
 
-        var buildingComponents = GetTree()
-            .GetNodesInGroup(nameof(BuildingComponent))
-            .Cast<BuildingComponent>()
-            .Where((buildingComponent) => buildingComponent != excludeBuildingComponent);
+        var buildingComponents = BuildingComponent.GetValidBuildingComponents(this);
 
         foreach (var buildingComponent in buildingComponents)
         {
@@ -335,6 +340,6 @@ public partial class GridManager : Node
 
     private void OnBuildingDestroyed(BuildingComponent buildingComponent)
     {
-        RecalculateGrid(buildingComponent);
+        RecalculateGrid();
     }
 }

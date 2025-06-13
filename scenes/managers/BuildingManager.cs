@@ -41,6 +41,7 @@ public partial class BuildingManager : Node
     private BuildingGhost buildingGhost;
     private State currentState;
     private int startingResourceCount;
+    private Vector2 buildingGhostDimensions;
 
     private int AvailableResourceCount =>
         startingResourceCount + currentResourceCount - currentlyUsedResourceCount;
@@ -86,13 +87,17 @@ public partial class BuildingManager : Node
 
     public override void _Process(double delta)
     {
-        var mouseGridPosition = gridManager.GetMouseGridCellPosition();
+        Vector2I mouseGridPosition = Vector2I.Zero;
 
         switch (currentState)
         {
             case State.Normal:
+                mouseGridPosition = gridManager.GetMouseGridCellPosition();
                 break;
             case State.PlacingBuilding:
+                mouseGridPosition = gridManager.GetMouseGridCellPositionWithDimensionOffset(
+                    buildingGhostDimensions
+                );
                 buildingGhost.GlobalPosition = mouseGridPosition * 64;
                 break;
         }
@@ -143,6 +148,8 @@ public partial class BuildingManager : Node
 
         building.GlobalPosition = hoveredGridArea.Position * 64;
 
+        building.GetFirstNodeOfType<BuildingAnimatorComponent>()?.PlayInAnimation();
+
         currentlyUsedResourceCount += toPlaceBuildingResource.ResourceCost;
         EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
 
@@ -152,11 +159,15 @@ public partial class BuildingManager : Node
     private void DestroyBuildingAtHoveredCellPosition()
     {
         var rootCell = hoveredGridArea.Position;
-        var buildingComponent = GetTree()
-            .GetNodesInGroup(nameof(BuildingComponent))
-            .Cast<BuildingComponent>()
-            .Where(_ => _.IsTileInBuildingArea(rootCell) && _.BuildingResource.IsDeletable)
-            .FirstOrDefault();
+        var buildingComponent = BuildingComponent
+            .GetValidBuildingComponents(this)
+            .FirstOrDefault(
+                (buildingComponent) =>
+                {
+                    return buildingComponent.BuildingResource.IsDeletable
+                        && buildingComponent.IsTileInBuildingArea(rootCell);
+                }
+            );
 
         if (buildingComponent == null)
         {
@@ -236,6 +247,8 @@ public partial class BuildingManager : Node
         var buildingSprite = buildingResource.SpriteScene.Instantiate<Sprite2D>();
         buildingGhost.AddSpriteNode(buildingSprite);
         buildingGhost.SetDimensions(buildingResource.Dimensions);
+
+        buildingGhostDimensions = buildingResource.Dimensions;
 
         toPlaceBuildingResource = buildingResource;
 

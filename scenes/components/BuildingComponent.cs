@@ -11,15 +11,32 @@ public partial class BuildingComponent : Node2D
     [Export(PropertyHint.File, "*.tres")]
     private string BuildingResourcePath;
 
+    [Export]
+    private BuildingAnimatorComponent buildingAnimatorComponent;
+
     public BuildingResource BuildingResource { get; private set; }
+    public bool IsDestroying { get; private set; }
 
     private HashSet<Vector2I> occupiedTiles = new();
+
+    public static IEnumerable<BuildingComponent> GetValidBuildingComponents(Node node)
+    {
+        return node.GetTree()
+            .GetNodesInGroup(nameof(BuildingComponent))
+            .Cast<BuildingComponent>()
+            .Where((buildingComponent) => !buildingComponent.IsDestroying);
+    }
 
     public override void _Ready()
     {
         if (BuildingResourcePath != null)
         {
             BuildingResource = GD.Load<BuildingResource>(BuildingResourcePath);
+        }
+
+        if (buildingAnimatorComponent != null)
+        {
+            buildingAnimatorComponent.DestroyAnimationFinished += OnDestroyAnimationFinished;
         }
 
         AddToGroup(nameof(BuildingComponent));
@@ -45,8 +62,15 @@ public partial class BuildingComponent : Node2D
 
     public void Destroy()
     {
+        IsDestroying = true;
+
         GameEvents.EmitBuildingDestroyed(this);
-        Owner.QueueFree();
+        buildingAnimatorComponent?.PlayDestroyAnimation();
+
+        if (buildingAnimatorComponent == null)
+        {
+            Owner.QueueFree();
+        }
     }
 
     private void CalculateOccupiedCellPositions()
@@ -66,5 +90,10 @@ public partial class BuildingComponent : Node2D
     {
         CalculateOccupiedCellPositions();
         GameEvents.EmitBuildingPlaced(this);
+    }
+
+    private void OnDestroyAnimationFinished()
+    {
+        Owner.QueueFree();
     }
 }
