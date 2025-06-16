@@ -52,8 +52,8 @@ public partial class BuildingManager : Node
         gridManager.ResourceTilesUpdated += OnResourceTilesUpdated;
 
         Callable
-            .From(
-                () => EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount)
+            .From(() =>
+                EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount)
             )
             .CallDeferred();
     }
@@ -120,6 +120,7 @@ public partial class BuildingManager : Node
     {
         gridManager.ClearHighlightedTiles();
         gridManager.HighlightBuildableTiles();
+        gridManager.HighlightGoblinOccupiedTiles();
 
         if (IsBuildingPlacableAtArea(hoveredGridArea))
         {
