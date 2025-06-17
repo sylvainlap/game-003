@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="LevelDefinitionResource" load_steps=2 format=3 uid="uid://cv66sklm8gcks"]
 
-[ext_resource type="Script" uid="uid://bnx0uq53624c3" path="res://resources/levels/LevelDefinitionResource.cs" id="1_rj5t6"]
+[ext_resource type="Script" uid="uid://bnx0uq53624c3" path="res://resources/levels/LevelDefinitionResource.cs" id="1_umpg0"]
 
 [resource]
-script = ExtResource("1_rj5t6")
+script = ExtResource("1_umpg0")
 Id = "urbi"
 StartingResourceCount = 5
 LevelScenePath = "uid://d2scm4uv5yq4v"

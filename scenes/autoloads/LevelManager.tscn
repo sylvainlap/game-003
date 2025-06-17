@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://bt2ybx6frnoyc"]
 
 [ext_resource type="Script" uid="uid://dspyx32adcvf3" path="res://scenes/autoloads/LevelManager.cs" id="1_k315a"]
-[ext_resource type="Resource" uid="uid://cv66sklm8gcks" path="res://resources/levels/level_urbi.tres" id="2_30ds4"]
-[ext_resource type="Resource" uid="uid://dcw6kqbk1whev" path="res://resources/levels/level_prln.tres" id="3_nv1nt"]
-[ext_resource type="Resource" uid="uid://b3tpll8p4dvrc" path="res://resources/levels/level_mteq.tres" id="4_p8eqw"]
-[ext_resource type="Resource" uid="uid://bmd64uvmf237h" path="res://resources/levels/level_dkzn.tres" id="5_30ds4"]
+[ext_resource type="Resource" uid="uid://cv66sklm8gcks" path="res://resources/levels/level_001.tres" id="2_30ds4"]
+[ext_resource type="Resource" uid="uid://dcw6kqbk1whev" path="res://resources/levels/level_002.tres" id="3_nv1nt"]
+[ext_resource type="Resource" uid="uid://b3tpll8p4dvrc" path="res://resources/levels/level_003.tres" id="4_p8eqw"]
+[ext_resource type="Resource" uid="uid://bmd64uvmf237h" path="res://resources/levels/level_004.tres" id="5_30ds4"]
 
 [node name="LevelManager" type="Node"]
 script = ExtResource("1_k315a")

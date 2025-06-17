@@ -16,6 +16,7 @@ public partial class BuildingComponent : Node2D
 
     public BuildingResource BuildingResource { get; private set; }
     public bool IsDestroying { get; private set; }
+    public bool IsDisabled { get; private set; }
 
     private HashSet<Vector2I> occupiedTiles = new();
 
@@ -25,6 +26,12 @@ public partial class BuildingComponent : Node2D
             .GetNodesInGroup(nameof(BuildingComponent))
             .Cast<BuildingComponent>()
             .Where((buildingComponent) => !buildingComponent.IsDestroying);
+    }
+
+    public static IEnumerable<BuildingComponent> GetDangerBuildingComponents(Node node)
+    {
+        return GetValidBuildingComponents(node)
+            .Where((buildingComponent) => buildingComponent.BuildingResource.IsDangerBuilding());
     }
 
     public override void _Ready()
@@ -55,9 +62,38 @@ public partial class BuildingComponent : Node2D
         return occupiedTiles.ToHashSet();
     }
 
+    public Rect2I GetTileArea()
+    {
+        var rootCell = GetGridCellPosition();
+        var tileArea = new Rect2I(rootCell, BuildingResource.Dimensions);
+        return tileArea;
+    }
+
     public bool IsTileInBuildingArea(Vector2I tilePosition)
     {
         return occupiedTiles.Contains(tilePosition);
+    }
+
+    public void Disable()
+    {
+        if (IsDisabled)
+        {
+            return;
+        }
+
+        IsDisabled = true;
+        GameEvents.EmitBuildingDisabled(this);
+    }
+
+    public void Enable()
+    {
+        if (!IsDisabled)
+        {
+            return;
+        }
+
+        IsDisabled = false;
+        GameEvents.EmitBuildingEnabled(this);
     }
 
     public void Destroy()

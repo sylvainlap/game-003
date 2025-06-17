@@ -1,12 +1,12 @@
 [gd_scene load_steps=6 format=4 uid="uid://ca4l4iikpj15k"]
 
 [ext_resource type="PackedScene" uid="uid://cnhmfrv8pldr2" path="res://scenes/levels/BaseLevel.tscn" id="1_6qb70"]
-[ext_resource type="Resource" uid="uid://b3tpll8p4dvrc" path="res://resources/levels/level_mteq.tres" id="2_rd0rm"]
+[ext_resource type="Resource" uid="uid://b3tpll8p4dvrc" path="res://resources/levels/level_003.tres" id="2_rd0rm"]
 [ext_resource type="TileSet" uid="uid://cwnhkcsibw1o8" path="res://resources/tiles.tres" id="2_wiqup"]
 [ext_resource type="PackedScene" uid="uid://bmaisdd53cvvd" path="res://scenes/levels/utils/ElevationLayer.tscn" id="3_rd0rm"]
 [ext_resource type="PackedScene" uid="uid://cn8rqrmxafve8" path="res://scenes/buildings/GoblinCamp.tscn" id="5_rd0rm"]
 
-[node name="Level" instance=ExtResource("1_6qb70")]
+[node name="Level003" instance=ExtResource("1_6qb70")]
 levelDefinitionResource = ExtResource("2_rd0rm")
 
 [node name="BaseTerrainTileMapLayer" parent="YSortRoot" index="0"]
@@ -57,7 +57,7 @@ position = Vector2(-384, -320)
 position = Vector2(832, 640)
 
 [node name="GoblinCamp" parent="YSortRoot" index="4" instance=ExtResource("5_rd0rm")]
-position = Vector2(576, 320)
+position = Vector2(512, 128)
 
 [editable path="YSortRoot/BaseTerrainTileMapLayer/ElevationLayer"]
 [editable path="YSortRoot/BaseTerrainTileMapLayer/ElevationLayer2"]

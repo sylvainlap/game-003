@@ -119,19 +119,40 @@ public partial class BuildingManager : Node
     private void UpdateGridDisplay()
     {
         gridManager.ClearHighlightedTiles();
-        gridManager.HighlightBuildableTiles();
-        gridManager.HighlightGoblinOccupiedTiles();
+
+        if (toPlaceBuildingResource.IsAttackBuilding())
+        {
+            gridManager.HighlightGoblinOccupiedTiles();
+            gridManager.HighlightBuildableTiles(true);
+        }
+        else
+        {
+            gridManager.HighlightBuildableTiles();
+            gridManager.HighlightGoblinOccupiedTiles();
+        }
 
         if (IsBuildingPlacableAtArea(hoveredGridArea))
         {
-            gridManager.HighlightExpandedBuildableTiles(
-                hoveredGridArea,
-                toPlaceBuildingResource.BuildableRadius
-            );
+            if (toPlaceBuildingResource.IsAttackBuilding())
+            {
+                gridManager.HighlightAttackTiles(
+                    hoveredGridArea,
+                    toPlaceBuildingResource.AttackRadius
+                );
+            }
+            else
+            {
+                gridManager.HighlightExpandedBuildableTiles(
+                    hoveredGridArea,
+                    toPlaceBuildingResource.BuildableRadius
+                );
+            }
+
             gridManager.HighlightResourceTiles(
                 hoveredGridArea,
                 toPlaceBuildingResource.ResourceRadius
             );
+
             buildingGhost.SetValid();
         }
         else
@@ -195,7 +216,10 @@ public partial class BuildingManager : Node
 
     private bool IsBuildingPlacableAtArea(Rect2I tileArea)
     {
-        var allTilesBuildable = gridManager.IsTileAreaBuildable(tileArea);
+        var allTilesBuildable = gridManager.IsTileAreaBuildable(
+            tileArea,
+            toPlaceBuildingResource.IsAttackBuilding()
+        );
 
         return allTilesBuildable && toPlaceBuildingResource.ResourceCost <= AvailableResourceCount;
     }
