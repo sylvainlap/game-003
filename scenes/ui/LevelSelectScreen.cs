@@ -1,10 +1,13 @@
 using Game.Autoload;
+using Game.Resources.Level;
 using Godot;
 
 namespace Game.Ui;
 
 public partial class LevelSelectScreen : MarginContainer
 {
+    private const int PAGE_SIZE = 6;
+
     [Signal]
     public delegate void BackButtonPressedEventHandler();
 
@@ -13,15 +16,43 @@ public partial class LevelSelectScreen : MarginContainer
 
     private GridContainer gridContainer;
     private Button backButton;
+    private int pageIndex;
+    private int maxPageIndex;
+    private LevelDefinitionResource[] levelDefinitions;
+    private Button previousPageButton;
+    private Button nextPageButton;
 
     public override void _Ready()
     {
         gridContainer = GetNode<GridContainer>("%GridContainer");
         backButton = GetNode<Button>("BackButton");
+        previousPageButton = GetNode<Button>("%PreviousPageButton");
+        nextPageButton = GetNode<Button>("%NextPageButton");
 
-        var levelDefinitions = LevelManager.GetLevelDefinitionResources();
+        levelDefinitions = LevelManager.GetLevelDefinitionResources();
 
-        for (var i = 0; i < levelDefinitions.Length; i++)
+        maxPageIndex = levelDefinitions.Length / PAGE_SIZE;
+
+        backButton.Pressed += OnBackButtonPressed;
+        previousPageButton.Pressed += () => OnPageChanged(-1);
+        nextPageButton.Pressed += () => OnPageChanged(1);
+
+        ShowPage();
+    }
+
+    private void ShowPage()
+    {
+        UpdateButtonVisibility();
+
+        foreach (var child in gridContainer.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        var startIndex = PAGE_SIZE * pageIndex;
+        var endIndex = Mathf.Min(startIndex + PAGE_SIZE, levelDefinitions.Length);
+
+        for (var i = startIndex; i < endIndex; i++)
         {
             var levelDefinition = levelDefinitions[i];
 
@@ -32,8 +63,14 @@ public partial class LevelSelectScreen : MarginContainer
             levelSelectSection.SetLevelDefinition(levelDefinition);
             levelSelectSection.LevelSelected += OnLevelSelected;
         }
+    }
 
-        backButton.Pressed += OnBackButtonPressed;
+    private void UpdateButtonVisibility()
+    {
+        previousPageButton.Disabled = pageIndex == 0;
+        previousPageButton.Modulate = pageIndex == 0 ? Colors.Transparent : Colors.White;
+        nextPageButton.Disabled = pageIndex == maxPageIndex;
+        nextPageButton.Modulate = pageIndex == maxPageIndex ? Colors.Transparent : Colors.White;
     }
 
     private void OnLevelSelected(int levelIndex)
@@ -44,5 +81,12 @@ public partial class LevelSelectScreen : MarginContainer
     private void OnBackButtonPressed()
     {
         EmitSignal(SignalName.BackButtonPressed);
+    }
+
+    private void OnPageChanged(int change)
+    {
+        pageIndex += change;
+
+        ShowPage();
     }
 }

@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_umpg0")
-Id = "urbi"
+Id = "001"
 StartingResourceCount = 5
 LevelScenePath = "uid://d2scm4uv5yq4v"
 metadata/_custom_type_script = "uid://bnx0uq53624c3"
