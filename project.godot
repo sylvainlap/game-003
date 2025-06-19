@@ -20,12 +20,12 @@ config/icon="res://icon.svg"
 GameEvents="*res://scenes/autoloads/GameEvents.tscn"
 LevelManager="*res://scenes/autoloads/LevelManager.tscn"
 SaveManager="*res://scenes/autoloads/SaveManager.tscn"
+SettingsManager="*res://scenes/autoloads/SettingsManager.tscn"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/stretch/mode="canvas_items"
 
 [dotnet]
 

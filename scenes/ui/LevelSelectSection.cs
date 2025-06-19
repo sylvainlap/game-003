@@ -12,6 +12,7 @@ public partial class LevelSelectSection : PanelContainer
     private Label levelNumberLabel;
     private Label resourceCountLabel;
     private Button button;
+    private TextureRect completedIndicator;
     private int levelIndex;
 
     public override void _Ready()
@@ -19,6 +20,7 @@ public partial class LevelSelectSection : PanelContainer
         levelNumberLabel = GetNode<Label>("%LevelNumberLabel");
         resourceCountLabel = GetNode<Label>("%ResourceCountLabel");
         button = GetNode<Button>("%Button");
+        completedIndicator = GetNode<TextureRect>("%CompletedIndicator");
 
         button.Pressed += OnButtonPressed;
     }
@@ -32,6 +34,7 @@ public partial class LevelSelectSection : PanelContainer
     public void SetLevelDefinition(LevelDefinitionResource levelDefinitionResource)
     {
         resourceCountLabel.Text = levelDefinitionResource.StartingResourceCount.ToString();
+        completedIndicator.Visible = SaveManager.IsLevelCompleted(levelDefinitionResource.Id);
     }
 
     private void OnButtonPressed()

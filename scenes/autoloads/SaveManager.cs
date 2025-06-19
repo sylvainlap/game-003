@@ -27,6 +27,13 @@ public partial class SaveManager : Node
         WriteSaveData();
     }
 
+    public static bool IsLevelCompleted(string levelId)
+    {
+        saveData.LevelCompletionStatus.TryGetValue(levelId, out var data);
+
+        return data?.IsCompleted == true;
+    }
+
     private static void WriteSaveData()
     {
         var dataString = JsonConvert.SerializeObject(saveData);
