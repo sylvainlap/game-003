@@ -210,6 +210,11 @@ public partial class GridManager : Node
         return true;
     }
 
+    public HashSet<Vector2I> GetCollectedResourceTiles()
+    {
+        return collectedResourceTiles.ToHashSet();
+    }
+
     private bool CanDestroyBarracks(BuildingComponent toDestroyBuildingComponent)
     {
         var disabledDangerBuildings = BuildingComponent

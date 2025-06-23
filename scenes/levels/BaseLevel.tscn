@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cnhmfrv8pldr2"]
+[gd_scene load_steps=14 format=3 uid="uid://cnhmfrv8pldr2"]
 
 [ext_resource type="Script" uid="uid://d0rpeq4k5hjrx" path="res://scenes/levels/BaseLevel.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://cwnhkcsibw1o8" path="res://resources/tiles.tres" id="2_0bbpv"]
@@ -8,9 +8,11 @@
 [ext_resource type="TileSet" uid="uid://24on0gfopfgm" path="res://resources/highlight_tileset.tres" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://cu17f0bk65h5k" path="res://scenes/buildings/Base.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://bd0qyfcra8o8l" path="res://scenes/GameCamera.tscn" id="5_xrhif"]
+[ext_resource type="PackedScene" uid="uid://bya5g07p62kip" path="res://scenes/managers/ResourceIndicatorManager.tscn" id="6_bmn0g"]
 [ext_resource type="PackedScene" uid="uid://dmpuqea0m7kje" path="res://scenes/ui/GameUi.tscn" id="6_c01mt"]
 [ext_resource type="PackedScene" uid="uid://dsaevmtlca6qs" path="res://scenes/buildings/BuildingGhost.tscn" id="8_jlsqs"]
 [ext_resource type="PackedScene" uid="uid://bdywt8t3ntbca" path="res://scenes/GoldMine.tscn" id="9_q8u5g"]
+[ext_resource type="PackedScene" uid="uid://bvg5fxf0mead6" path="res://scenes/managers/FloatingTextManager.tscn" id="13_0pu2i"]
 
 [node name="BaseLevel" type="Node"]
 script = ExtResource("1_elqb8")
@@ -53,3 +55,8 @@ unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.705882)
 y_sort_enabled = true
 tile_set = ExtResource("2_rvslj")
+
+[node name="ResourceIndicatorManager" parent="." node_paths=PackedStringArray("gridManager") instance=ExtResource("6_bmn0g")]
+gridManager = NodePath("../GridManager")
+
+[node name="FloatingTextManager" parent="." instance=ExtResource("13_0pu2i")]

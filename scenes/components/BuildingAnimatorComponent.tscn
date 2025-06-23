@@ -1,13 +1,127 @@
-[gd_scene load_steps=5 format=3 uid="uid://s3yqoe4533l6"]
+[gd_scene load_steps=12 format=3 uid="uid://s3yqoe4533l6"]
 
 [ext_resource type="Script" uid="uid://dm0fwci00kdx8" path="res://scenes/components/BuildingAnimatorComponent.cs" id="1_jv7v6"]
 [ext_resource type="Texture2D" uid="uid://dy03kxaqlor5q" path="res://assets/buildings/building_mask.png" id="2_2thtt"]
-[ext_resource type="PackedScene" uid="uid://0xxqyt70dn3s" path="res://scenes/effects/BuildingImpactParticles.tscn" id="2_8jlnq"]
+[ext_resource type="Texture2D" uid="uid://v4aans2iiy3s" path="res://assets/effects/particle.png" id="2_tumsp"]
 [ext_resource type="PackedScene" uid="uid://cxvqnq64u6avp" path="res://scenes/effects/BuildingDestroyParticles.tscn" id="3_tumsp"]
+
+[sub_resource type="Animation" id="Animation_6cklv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GPUParticles2D2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_awmar"]
+resource_name = "default"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GPUParticles2D2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fw4me"]
+_data = {
+&"RESET": SubResource("Animation_6cklv"),
+&"default": SubResource("Animation_awmar")
+}
+
+[sub_resource type="Curve" id="Curve_awmar"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.193069, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_6cklv"]
+curve = SubResource("Curve_awmar")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6cklv"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 16.0
+angle_min = 1.07288e-05
+angle_max = 360.0
+spread = 15.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+gravity = Vector3(0, -500, 0)
+damping_min = 300.0
+damping_max = 600.0
+scale_curve = SubResource("CurveTexture_6cklv")
+
+[sub_resource type="PackedScene" id="PackedScene_d7pln"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("BuildingImpactParticles", "Node2D", "AnimationPlayer", "AnimationPlayer", "libraries", "autoplay", "GPUParticles2D", "GPUParticles2D", "position", "emitting", "amount", "texture", "lifetime", "one_shot", "explosiveness", "fixed_fps", "interpolate", "draw_order", "process_material", "GPUParticles2D2", "GPUParticles2D", "position", "rotation", "emitting", "amount", "texture", "lifetime", "one_shot", "explosiveness", "fixed_fps", "interpolate", "draw_order", "process_material"),
+"node_count": 4,
+"node_paths": [NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 0, 0, 1073741824, 0, 3, 2, -1, 2, 4, 0, 5, 1, 0, 1073741825, 0, 7, 6, -1, 11, 8, 2, 9, 3, 10, 4, 11, 5, 12, 6, 13, 7, 14, 8, 15, 9, 16, 10, 17, 11, 18, 12, 0, 1073741826, 0, 20, 19, -1, 12, 21, 13, 22, 14, 23, 15, 24, 16, 25, 17, 26, 18, 27, 19, 28, 20, 29, 21, 30, 22, 31, 23, 32, 24, 0),
+"variants": [{
+&"": SubResource("AnimationLibrary_fw4me")
+}, "default", Vector2(0, -24), false, 15, ExtResource("2_tumsp"), 0.7, true, 0.9, 0, false, 0, SubResource("ParticleProcessMaterial_6cklv"), Vector2(0, -24), -3.14159, false, 15, ExtResource("2_tumsp"), 0.7, true, 0.9, 0, false, 0, SubResource("ParticleProcessMaterial_6cklv")],
+"version": 3
+}
 
 [node name="BuildingAnimatorComponent" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_jv7v6")
-impactParticlesScene = ExtResource("2_8jlnq")
+impactParticlesScene = SubResource("PackedScene_d7pln")
 destroyParticlesScene = ExtResource("3_tumsp")
 maskTexture = ExtResource("2_2thtt")
