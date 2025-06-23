@@ -21,6 +21,8 @@ GameEvents="*res://scenes/autoloads/GameEvents.tscn"
 LevelManager="*res://scenes/autoloads/LevelManager.tscn"
 SaveManager="*res://scenes/autoloads/SaveManager.tscn"
 SettingsManager="*res://scenes/autoloads/SettingsManager.tscn"
+Cursor="*res://scenes/autoloads/Cursor.tscn"
+AudioHelpers="*res://scenes/autoloads/AudioHelpers.tscn"
 
 [display]
 

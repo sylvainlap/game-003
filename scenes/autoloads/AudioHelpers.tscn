@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://dippvaqcumqh6"]
+
+[ext_resource type="AudioStream" uid="uid://dv200kbn52hf" path="res://assets/audio/explosion_01.wav" id="1_8kder"]
+[ext_resource type="Script" uid="uid://belhxt1eqoh5s" path="res://scenes/autoloads/AudioHelpers.cs" id="1_a4bn8"]
+[ext_resource type="AudioStream" uid="uid://co7ww04gn5o5o" path="res://assets/audio/explosion_02.wav" id="2_a4bn8"]
+[ext_resource type="AudioStream" uid="uid://c8gftwc5vy2nl" path="res://assets/audio/explosion_03.wav" id="3_ddfwn"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_wt70y"]
+streams_count = 3
+stream_0/stream = ExtResource("1_8kder")
+stream_1/stream = ExtResource("2_a4bn8")
+stream_2/stream = ExtResource("3_ddfwn")
+
+[node name="AudioHelpers" type="Node"]
+script = ExtResource("1_a4bn8")
+
+[node name="ExplosionAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_wt70y")
+max_polyphony = 3
+bus = &"SFX"
