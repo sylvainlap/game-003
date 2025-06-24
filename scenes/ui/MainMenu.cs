@@ -1,9 +1,13 @@
+using Game.Autoload;
 using Godot;
 
 namespace Game.Ui;
 
 public partial class MainMenu : Node
 {
+    [Export]
+    private PackedScene optionsMenuScene;
+
     private Button playButton;
     private Button optionsButton;
     private Button quitButton;
@@ -21,7 +25,10 @@ public partial class MainMenu : Node
         mainMenuContainer.Visible = true;
         levelSelectScreen.Visible = false;
 
+        AudioHelpers.RegisterButtons(new Button[] { playButton, optionsButton, quitButton });
+
         playButton.Pressed += OnPlayButtonPressed;
+        optionsButton.Pressed += OnOptionsButtonPressed;
         quitButton.Pressed += OnQuitButtonPressed;
         levelSelectScreen.BackButtonPressed += OnLevelSelectScreenBackButtonPressed;
     }
@@ -30,6 +37,24 @@ public partial class MainMenu : Node
     {
         mainMenuContainer.Visible = false;
         levelSelectScreen.Visible = true;
+    }
+
+    private void OnOptionsButtonPressed()
+    {
+        mainMenuContainer.Visible = false;
+
+        var optionsMenu = optionsMenuScene.Instantiate<OptionsMenu>();
+        AddChild(optionsMenu);
+        optionsMenu.DonePressed += () =>
+        {
+            OnOptionsDonePressed(optionsMenu);
+        };
+    }
+
+    private void OnOptionsDonePressed(OptionsMenu optionsMenu)
+    {
+        optionsMenu.QueueFree();
+        mainMenuContainer.Visible = true;
     }
 
     private void OnQuitButtonPressed()

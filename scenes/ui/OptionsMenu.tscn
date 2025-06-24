@@ -1,0 +1,120 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccod0gm1rhg35"]
+
+[ext_resource type="Script" uid="uid://cll55myxp7vam" path="res://scenes/ui/OptionsMenu.cs" id="1_i16wg"]
+
+[node name="OptionsMenu" type="CanvasLayer"]
+layer = 3
+script = ExtResource("1_i16wg")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="SFXPanelContainer" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerAlternate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"OptionLabel"
+text = "SFX"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = 16
+
+[node name="SFXDownButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Down"
+
+[node name="SFXLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OptionLabel"
+text = "10"
+
+[node name="SFXUpButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/SFXPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Up"
+
+[node name="MusicPanelContainer" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerAlternate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"OptionLabel"
+text = "Music"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = 16
+
+[node name="MusicDownButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Down"
+
+[node name="MusicLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OptionLabel"
+text = "10"
+
+[node name="MusicUpButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/MusicPanelContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Up"
+
+[node name="WindowPanelContainer" type="PanelContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerAlternate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/WindowPanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/WindowPanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"OptionLabel"
+text = "Window mode"
+
+[node name="WindowButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/WindowPanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="DoneButton" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Done"

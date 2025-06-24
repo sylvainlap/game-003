@@ -66,12 +66,14 @@ public partial class BuildingManager : Node
                 if (@event.IsActionPressed(ACTION_RIGHT_CLICK))
                 {
                     DestroyBuildingAtHoveredCellPosition();
+                    GetViewport().SetInputAsHandled();
                 }
                 break;
             case State.PlacingBuilding:
                 if (@event.IsActionPressed(ACTION_CANCEL))
                 {
                     ChangeState(State.Normal);
+                    GetViewport().SetInputAsHandled();
                 }
                 else if (
                     @event.IsActionPressed(ACTION_LEFT_CLICK)
@@ -79,6 +81,7 @@ public partial class BuildingManager : Node
                 )
                 {
                     PlaceBuildingAtHoveredCellPosition();
+                    GetViewport().SetInputAsHandled();
                 }
                 break;
         }

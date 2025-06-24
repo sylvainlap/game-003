@@ -22,6 +22,8 @@ public partial class LevelSelectSection : PanelContainer
         button = GetNode<Button>("%Button");
         completedIndicator = GetNode<TextureRect>("%CompletedIndicator");
 
+        AudioHelpers.RegisterButtons(new Button[] { button });
+
         button.Pressed += OnButtonPressed;
     }
 

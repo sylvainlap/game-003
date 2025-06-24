@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=4 uid="uid://bt318kjxrcsbq"]
+[gd_scene load_steps=9 format=4 uid="uid://bt318kjxrcsbq"]
 
 [ext_resource type="Script" uid="uid://ckppbin75j8vw" path="res://scenes/ui/MainMenu.cs" id="1_bhu4a"]
+[ext_resource type="PackedScene" uid="uid://ccod0gm1rhg35" path="res://scenes/ui/OptionsMenu.tscn" id="2_7mi0g"]
 [ext_resource type="TileSet" uid="uid://cwnhkcsibw1o8" path="res://resources/tiles.tres" id="2_iwbf0"]
 [ext_resource type="PackedScene" uid="uid://bmaisdd53cvvd" path="res://scenes/levels/utils/ElevationLayer.tscn" id="3_2ysvc"]
 [ext_resource type="PackedScene" uid="uid://cu17f0bk65h5k" path="res://scenes/buildings/Base.tscn" id="3_xpiny"]
@@ -10,6 +11,7 @@
 
 [node name="MainMenu" type="Node"]
 script = ExtResource("1_bhu4a")
+optionsMenuScene = ExtResource("2_7mi0g")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(704, 320)

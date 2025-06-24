@@ -8,8 +8,13 @@ namespace Game;
 
 public partial class BaseLevel : Node
 {
+    private readonly StringName ACTION_ESCAPE = "escape";
+
     [Export]
     private PackedScene levelCompleteScreenScene;
+
+    [Export]
+    private PackedScene escapeMenuScene;
 
     [Export]
     private LevelDefinitionResource levelDefinitionResource;
@@ -38,7 +43,21 @@ public partial class BaseLevel : Node
 
         buildingManager.SetStartingResourceCount(levelDefinitionResource.StartingResourceCount);
 
+        gridManager.SetGoldMinePosition(
+            gridManager.ConvertWorldPositionToTilePosition(goldMine.GlobalPosition)
+        );
+
         gridManager.GridStateUpdated += OnGridStateUpdated;
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event.IsActionPressed(ACTION_ESCAPE))
+        {
+            var escapeMenu = escapeMenuScene.Instantiate<EscapeMenu>();
+            AddChild(escapeMenu);
+            GetViewport().SetInputAsHandled();
+        }
     }
 
     private void ShowLevelComplete()
